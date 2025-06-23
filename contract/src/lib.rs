@@ -17,7 +17,9 @@ fn process_instruction(
     let user_acc = next_account_info(iter)?;
     let system_program = next_account_info(iter)?;
     let seeds = &[user_acc.key.as_ref(), b"user"];
+    let (pda_pub_key, bump) = Pubkey::find_program_address(seeds, program_id);
+
     let ix = create_account(user_acc.key, pda.key, 1000000000, 8, program_id);
-    invoke_signed(&ix, accounts, &[seeds]);
+    invoke_signed(&ix, accounts, &[&[seeds, &[bump]]]);
     Ok(())
 }
