@@ -6,7 +6,6 @@ use solana_program::{
     pubkey::Pubkey,
     system_instruction::create_account,
 };
-
 entrypoint!(process_instruction);
 fn process_instruction(
     program_id: &Pubkey,
