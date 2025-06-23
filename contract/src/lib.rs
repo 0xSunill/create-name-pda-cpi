@@ -1,6 +1,7 @@
 use solana_program::{
     account_info::{next_account_info, AccountInfo},
-    entrypoint::{self, ProgramResult},
+    entrypoint,
+    entrypoint::{ ProgramResult},
     program::invoke_signed,
     pubkey::Pubkey,
     system_instruction::create_account,
@@ -18,8 +19,19 @@ fn process_instruction(
     let system_program = next_account_info(iter)?;
     let seeds = &[user_acc.key.as_ref(), b"user"];
     let (pda_pub_key, bump) = Pubkey::find_program_address(seeds, program_id);
-
     let ix = create_account(user_acc.key, pda.key, 1000000000, 8, program_id);
-    invoke_signed(&ix, accounts, &[&[seeds, &[bump]]]);
+
+    let signer_seeds: &[&[u8]] = &[
+        user_acc.key.as_ref(),
+        b"user",
+        &[bump],
+    ];
+    
+    invoke_signed(
+        &ix,
+        &[user_acc.clone(), pda.clone(), system_program.clone()],
+        &[signer_seeds],
+    )?;
+    
     Ok(())
 }
