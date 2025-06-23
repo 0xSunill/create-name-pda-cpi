@@ -29,7 +29,6 @@ describe("Create pda from client", () => {
                     isSigner: true,
                     isWritable: true,
                 },
-
                 {
                     pubkey: SystemProgram.programId,
                     isSigner: false,
